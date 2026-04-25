@@ -1,21 +1,21 @@
-body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; padding: 20px; }
-header { text-align: center; margin-bottom: 30px; }
-#searchInput { padding: 10px; width: 80%; max-width: 400px; border-radius: 5px; border: 1px solid #ccc; }
-
-#dvdList { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 20px; 
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
 }
 
-.dvd-card { 
-    background: white; 
-    padding: 15px; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-    border-left: 5px solid #2c3e50;
+button:hover { background-color: #2980b9; }
+
+.dvd-card.watchlist {
+    background-color: #fff9db;
+    border-left: 5px solid #f1c40f;
 }
 
-.dvd-card.watchlist { border-left-color: #e74c3c; background: #fff5f5; }
-.badge { background: #e74c3c; color: white; padding: 2px 6px; font-size: 0.8em; border-radius: 3px; }
-h3 { margin-top: 0; color: #2c3e50; }
+.dvd-card.watchlist button {
+    background-color: #e67e22;
+}
