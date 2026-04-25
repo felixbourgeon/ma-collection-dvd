@@ -1,0 +1,23 @@
+[
+    { 
+        "titre": "Inception", 
+        "real": "Christopher Nolan", 
+        "annee": 2010, 
+        "rangement": "Étagère A", 
+        "watchlist": false 
+    },
+    { 
+        "titre": "Pulp Fiction", 
+        "real": "Quentin Tarantino", 
+        "annee": 1994, 
+        "rangement": "Salon", 
+        "watchlist": false 
+    },
+    { 
+        "titre": "Interstellar", 
+        "real": "Christopher Nolan", 
+        "annee": 2014, 
+        "rangement": "Étagère A", 
+        "watchlist": true 
+    }
+]
