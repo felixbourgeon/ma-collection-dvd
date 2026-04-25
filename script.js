@@ -1,49 +1,79 @@
 const dvdList = document.getElementById('dvdList');
 const searchInput = document.getElementById('searchInput');
+const watchlistFilter = document.getElementById('watchlistFilter');
 
-// 1. Tes données (on les remet ici pour plus de simplicité au début)
-let mesDVDs = [
-    { id: 1, titre: "Inception", real: "Christopher Nolan", annee: 2010, rangement: "Étagère A" },
-    { id: 2, titre: "Pulp Fiction", real: "Quentin Tarantino", annee: 1994, rangement: "Salon" },
-    { id: 3, titre: "Interstellar", real: "Christopher Nolan", annee: 2014, rangement: "Étagère A" }
-];
-
-// 2. Gestion de la Watchlist (récupération depuis la mémoire du navigateur)
+let mesDVDs = []; // On part d'une liste vide
 let watchlist = JSON.parse(localStorage.getItem('maWatchlist')) || [];
 
+// 1. CHARGEMENT DES DONNÉES DEPUIS LE FICHIER JSON
+fetch('dvds.json')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Erreur lors du chargement du fichier JSON");
+        }
+        return response.json();
+    })
+    .then(data => {
+        mesDVDs = data; // On stocke les données reçues
+        majAffichage(); // On lance le premier affichage
+    })
+    .catch(error => {
+        console.error("Erreur :", error);
+        dvdList.innerHTML = "<p>Erreur de chargement des films. Vérifiez le fichier dvds.json.</p>";
+    });
+
+// 2. LOGIQUE DE LA WATCHLIST
 function toggleWatchlist(id) {
     if (watchlist.includes(id)) {
-        watchlist = watchlist.filter(item => item !== id); // On l'enlève
+        watchlist = watchlist.filter(item => item !== id);
     } else {
-        watchlist.push(id); // On l'ajoute
+        watchlist.push(id);
     }
     localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
-    afficherFilms(filtrerFilms()); // On rafraîchit l'affichage
+    majAffichage();
 }
 
-// 3. Fonction de filtrage avancée
-function filtrerFilms() {
+// 3. LOGIQUE DE FILTRAGE (Recherche + Checkbox)
+function majAffichage() {
     const recherche = searchInput.value.toLowerCase();
-    return mesDVDs.filter(dvd => {
-        return dvd.titre.toLowerCase().includes(recherche) || 
-               dvd.real.toLowerCase().includes(recherche) ||
-               dvd.annee.toString().includes(recherche) ||
-               dvd.rangement.toLowerCase().includes(recherche);
+    const filtreActif = watchlistFilter.checked;
+
+    const filmsFiltres = mesDVDs.filter(dvd => {
+        const matchTexte = 
+            (dvd.titre && dvd.titre.toLowerCase().includes(recherche)) || 
+            (dvd.real && dvd.real.toLowerCase().includes(recherche)) ||
+            (dvd.annee && dvd.annee.toString().includes(recherche)) ||
+            (dvd.rangement && dvd.rangement.toLowerCase().includes(recherche));
+        
+        const matchWatchlist = filtreActif ? watchlist.includes(dvd.id) : true;
+
+        return matchTexte && matchWatchlist;
     });
+
+    afficherFilms(filmsFiltres);
 }
 
-// 4. Affichage des films
+// 4. GÉNÉRATION DES CARTES HTML
 function afficherFilms(films) {
     dvdList.innerHTML = "";
+    
+    if (films.length === 0) {
+        dvdList.innerHTML = "<p>Aucun film ne correspond à votre recherche.</p>";
+        return;
+    }
+
     films.forEach(dvd => {
         const estDansWatchlist = watchlist.includes(dvd.id);
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''}`;
         
         card.innerHTML = `
-            <h3>${dvd.titre}</h3>
-            <p><strong>Réalisateur :</strong> ${dvd.real} (${dvd.annee})</p>
-            <p><strong>Rangement :</strong> ${dvd.rangement}</p>
+            <div>
+                <h3>${dvd.titre || 'Sans titre'}</h3>
+                <p><strong>Réal :</strong> ${dvd.real || 'Inconnu'}</p>
+                <p><strong>Année :</strong> ${dvd.annee || 'N/C'}</p>
+                <p><strong>Lieu :</strong> ${dvd.rangement || 'Non classé'}</p>
+            </div>
             <button onclick="toggleWatchlist(${dvd.id})">
                 ${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}
             </button>
@@ -52,10 +82,6 @@ function afficherFilms(films) {
     });
 }
 
-// Écouteur d'événement pour la recherche
-searchInput.addEventListener('input', () => {
-    afficherFilms(filtrerFilms());
-});
-
-// Lancement initial
-afficherFilms(mesDVDs);
+// Écouteurs d'événements
+searchInput.addEventListener('input', majAffichage);
+watchlistFilter.addEventListener('change', majAffichage);
