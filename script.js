@@ -9,30 +9,42 @@ let watchlist = JSON.parse(localStorage.getItem('maWatchlist')) || [];
 let pageActuelle = 1;
 const filmsParPage = 40;
 
-// Chargement sécurisé des données
+// On utilise ton lien avec anti-cache pour être sûr d'avoir les bonnes infos
 fetch('dvds.json?v=' + new Date().getTime())
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
         mesDVDs = data;
         majAffichage();
     })
-    .catch(err => {
-        console.error(err);
-        if(dvdList) dvdList.innerHTML = "Erreur de chargement des données.";
+    .catch(error => {
+        console.error("Erreur :", error);
+        dvdList.innerHTML = "<p>Erreur de chargement des films.</p>";
     });
 
+function toggleWatchlist(id) {
+    if (watchlist.includes(id)) {
+        watchlist = watchlist.filter(item => item !== id);
+    } else {
+        watchlist.push(id);
+    }
+    localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
+    majAffichage();
+}
+
 function majAffichage() {
-    // 1. Filtrage
-    let films = mesDVDs.filter(dvd => {
-        const recherche = searchInput.value.toLowerCase();
+    // 1. On filtre
+    const recherche = searchInput.value.toLowerCase();
+    const neVoirQueWatchlist = watchlistFilter.checked;
+
+    let filmsResultats = mesDVDs.filter(dvd => {
         const matchTexte = (dvd.titre + (dvd.real || "") + (dvd.annee || "") + (dvd.rangement || "")).toLowerCase().includes(recherche);
-        const matchWatchlist = watchlistFilter.checked ? watchlist.includes(dvd.id) : true;
+        const matchWatchlist = neVoirQueWatchlist ? watchlist.includes(dvd.id) : true;
         return matchTexte && matchWatchlist;
     });
 
-    // 2. Tri (Titre, Réal, Année, Rangement)
+    // 2. On trie
     const [critere, ordre] = sortSelect.value.split('-');
-    films.sort((a, b) => {
+    filmsResultats.sort((a, b) => {
         let aVal = a[critere] ? a[critere].toString().toLowerCase() : "";
         let bVal = b[critere] ? b[critere].toString().toLowerCase() : "";
         
@@ -45,46 +57,44 @@ function majAffichage() {
         return aVal < bVal ? 1 : -1;
     });
 
-    // 3. Pagination (40 par page)
-    const totalPages = Math.ceil(films.length / filmsParPage) || 1;
+    // 3. On pagine
+    const totalPages = Math.ceil(filmsResultats.length / filmsParPage) || 1;
+    if (pageActuelle > totalPages) pageActuelle = 1;
+    
     const debut = (pageActuelle - 1) * filmsParPage;
-    const filmsAffiches = films.slice(debut, debut + filmsParPage);
+    const filmsAPresenter = filmsResultats.slice(debut, debut + filmsParPage);
 
-    afficherCards(filmsAffiches);
-    afficherPagination(totalPages);
+    afficherFilms(filmsAPresenter);
+    genererPagination(totalPages);
 }
 
-function afficherCards(films) {
-    if(!dvdList) return;
-    dvdList.innerHTML = films.length ? "" : "<p>Aucun film trouvé.</p>";
-    
+function afficherFilms(films) {
+    dvdList.innerHTML = "";
+    if (films.length === 0) {
+        dvdList.innerHTML = "<p>Aucun film trouvé.</p>";
+        return;
+    }
+
     films.forEach(dvd => {
         const estDansWatchlist = watchlist.includes(dvd.id);
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''}`;
         card.innerHTML = `
-            <h3>${dvd.titre || "Sans titre"}</h3>
-            <p><strong>Réalisateur :</strong> ${dvd.real || "Inconnu"}</p>
-            <p><strong>Année :</strong> ${dvd.annee || "N/C"}</p>
-            <p><strong>Rangement :</strong> ${dvd.rangement || "Non classé"}</p>
-            <button onclick="changerWatchlist(${dvd.id})">${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}</button>
+            <div>
+                <h3>${dvd.titre || 'Sans titre'}</h3>
+                <p><strong>Réalisateur :</strong> ${dvd.real || 'Inconnu'}</p>
+                <p><strong>Année :</strong> ${dvd.annee || 'N/C'}</p>
+                <p><strong>Rangement :</strong> ${dvd.rangement || 'Non classé'}</p>
+            </div>
+            <button onclick="toggleWatchlist(${dvd.id})">
+                ${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}
+            </button>
         `;
         dvdList.appendChild(card);
     });
 }
 
-function changerWatchlist(id) {
-    if (watchlist.includes(id)) {
-        watchlist = watchlist.filter(item => item !== id);
-    } else {
-        watchlist.push(id);
-    }
-    localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
-    majAffichage();
-}
-
-function afficherPagination(total) {
-    if(!paginationContainer) return;
+function genererPagination(total) {
     paginationContainer.innerHTML = "";
     if (total <= 1) return;
 
@@ -92,12 +102,16 @@ function afficherPagination(total) {
         const btn = document.createElement('button');
         btn.innerText = i;
         btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-        btn.onclick = () => { pageActuelle = i; majAffichage(); window.scrollTo(0,0); };
+        btn.onclick = () => {
+            pageActuelle = i;
+            majAffichage();
+            window.scrollTo(0, 0);
+        };
         paginationContainer.appendChild(btn);
     }
 }
 
-// Écouteurs d'événements
-if(searchInput) searchInput.oninput = () => { pageActuelle = 1; majAffichage(); };
-if(watchlistFilter) watchlistFilter.onchange = () => { pageActuelle = 1; majAffichage(); };
-if(sortSelect) sortSelect.onchange = () => majAffichage();
+// Écouteurs
+searchInput.addEventListener('input', () => { pageActuelle = 1; majAffichage(); });
+watchlistFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); });
+sortSelect.addEventListener('change', majAffichage);

@@ -5,8 +5,8 @@ header { text-align: center; margin-bottom: 30px; }
 #searchInput { padding: 12px; width: 80%; max-width: 500px; border-radius: 8px; border: 1px solid #ddd; }
 
 .controls-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
-.filter-container { background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-#sortSelect { padding: 8px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; }
+.filter-container { background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 0.9em; }
+#sortSelect { padding: 8px 12px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; background: white; }
 
 #dvdList { 
     display: grid; 
@@ -21,11 +21,12 @@ header { text-align: center; margin-bottom: 30px; }
 }
 
 .dvd-card.watchlist { border-top-color: #f1c40f; background-color: #fffef0; }
-.dvd-card h3 { margin: 0 0 10px 0; color: #2c3e50; }
+.dvd-card h3 { margin: 0 0 10px 0; color: #2c3e50; font-size: 1.2em; }
 .dvd-card p { margin: 4px 0; color: #555; font-size: 0.9em; }
 
 .pagination-container { margin: 20px 0; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
 .page-btn { padding: 5px 12px; border: 1px solid #3498db; background: white; color: #3498db; border-radius: 4px; cursor: pointer; }
 .page-btn.active { background: #3498db; color: white; }
 
-button { background-color: #3498db; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+button { background-color: #3498db; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+button:hover { background-color: #2980b9; }
