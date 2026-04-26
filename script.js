@@ -22,7 +22,6 @@ fetch('dvds.json?v=' + new Date().getTime())
     });
 
 function majAffichage() {
-    function majAffichage() {
     const recherche = searchInput.value.toLowerCase();
     
     // 1. Filtrage
