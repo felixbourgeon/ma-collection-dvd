@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma DVDthèque</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <header>
-        <h1>Ma Collection DVD</h1>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Rechercher titre, réalisateur, année, rangement...">
-            
-            <div class="filter-container">
-                <label>
-                    <input type="checkbox" id="watchlistFilter"> ⭐ Afficher la Watchlist uniquement
-                </label>
-            </div>
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Rechercher titre, réalisateur, année, rangement...">
+    
+    <div class="controls-row">
+        <div class="filter-container">
+            <label><input type="checkbox" id="watchlistFilter"> ⭐ Watchlist</label>
         </div>
-    </header>
 
-    <main id="dvdList"></main>
+        <select id="sortSelect">
+            <option value="titre-asc">Titre (A-Z)</option>
+            <option value="titre-desc">Titre (Z-A)</option>
+            <option value="real-asc">Réalisateur (A-Z)</option>
+            <option value="real-desc">Réalisateur (Z-A)</option>
+            <option value="annee-desc">Plus récents</option>
+            <option value="annee-asc">Plus anciens</option>
+            <option value="rangement-asc">Rangement (A-Z)</option>
+        </select>
+    </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <div id="pagination" class="pagination-container"></div>
+</div>
