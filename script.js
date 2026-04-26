@@ -9,7 +9,6 @@ let watchlist = JSON.parse(localStorage.getItem('maWatchlist')) || [];
 let pageActuelle = 1;
 const filmsParPage = 40;
 
-// Chargement des données
 fetch('dvds.json?v=' + new Date().getTime())
     .then(res => res.json())
     .then(data => {
@@ -24,45 +23,35 @@ fetch('dvds.json?v=' + new Date().getTime())
 function majAffichage() {
     const recherche = searchInput.value.toLowerCase();
     
-    // 1. Filtrage
     let resultats = mesDVDs.filter(dvd => {
         const matchTexte = (dvd.titre + (dvd.real || "") + (dvd.annee || "") + (dvd.rangement || "")).toLowerCase().includes(recherche);
         const matchWatchlist = watchlistFilter.checked ? watchlist.includes(dvd.id) : true;
         return matchTexte && matchWatchlist;
     });
 
-    // --- MISE À JOUR DU COMPTEUR ---
+    // Mise à jour du compteur
     const countElement = document.getElementById('movieCount');
     if (countElement) {
         countElement.innerText = `${resultats.length} film${resultats.length > 1 ? 's' : ''}`;
     }
-    // ------------------------------
 
-    // 2. Tri
     const [critere, ordre] = sortSelect.value.split('-');
     resultats.sort((a, b) => {
         let valA = a[critere] ? a[critere].toString().toLowerCase() : "";
         let valB = b[critere] ? b[critere].toString().toLowerCase() : "";
-        
-        if (critere === 'annee') {
-            valA = parseInt(a.annee) || 0;
-            valB = parseInt(b.annee) || 0;
+        if (critere === "annee") {
+            valA = parseInt(valA) || 0;
+            valB = parseInt(valB) || 0;
         }
-
-        if (valA < valB) return ordre === 'asc' ? -1 : 1;
-        if (valA > valB) return ordre === 'asc' ? 1 : -1;
-        return 0;
+        if (ordre === 'asc') return valA > valB ? 1 : -1;
+        return valA < valB ? 1 : -1;
     });
 
-    // 3. Pagination
-    const totalPages = Math.ceil(resultats.length / filmsParPage);
-    if (pageActuelle > totalPages && totalPages > 0) pageActuelle = totalPages;
-    
+    const totalPages = Math.ceil(resultats.length / filmsParPage) || 1;
+    if (pageActuelle > totalPages) pageActuelle = 1;
     const debut = (pageActuelle - 1) * filmsParPage;
-    const fin = debut + filmsParPage;
-    const filmsAffiches = resultats.slice(debut, fin);
-
-    afficherFilms(filmsAffiches);
+    
+    afficherFilms(resultats.slice(debut, debut + filmsParPage));
     afficherPagination(totalPages);
 }
 
@@ -102,7 +91,6 @@ function afficherPagination(total) {
     }
 }
 
-// Écouteurs
 searchInput.oninput = () => { pageActuelle = 1; majAffichage(); };
 watchlistFilter.onchange = () => { pageActuelle = 1; majAffichage(); };
 sortSelect.onchange = () => majAffichage();
