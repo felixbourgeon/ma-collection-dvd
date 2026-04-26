@@ -24,16 +24,17 @@ fetch('dvds.json?v=' + new Date().getTime())
 function majAffichage() {
     let films = mesDVDs.filter(dvd => {
         const recherche = searchInput.value.toLowerCase();
-        const matchTexte = (dvd.titre + dvd.real + dvd.annee).toLowerCase().includes(recherche);
+        const matchTexte = (dvd.titre + (dvd.real || "") + (dvd.annee || "") + (dvd.rangement || "")).toLowerCase().includes(recherche);
         const matchWatchlist = watchlistFilter.checked ? watchlist.includes(dvd.id) : true;
         return matchTexte && matchWatchlist;
     });
 
-    // Tri
+    // Logique de tri améliorée
     const [critere, ordre] = sortSelect.value.split('-');
     films.sort((a, b) => {
-        let aVal = a[critere] || "";
-        let bVal = b[critere] || "";
+        let aVal = a[critere] ? a[critere].toString().toLowerCase() : "";
+        let bVal = b[critere] ? b[critere].toString().toLowerCase() : "";
+        
         if (ordre === 'asc') return aVal > bVal ? 1 : -1;
         return aVal < bVal ? 1 : -1;
     });
@@ -54,10 +55,10 @@ function afficherCards(films) {
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''}`;
         card.innerHTML = `
-            <h3>${dvd.titre}</h3>
-            <p>Réal : ${dvd.real}</p>
-            <p>Année : ${dvd.annee}</p>
-            <p>Lieu : ${dvd.rangement}</p>
+            <h3>${dvd.titre || "Sans titre"}</h3>
+            <p>Réalisateur : ${dvd.real || "Inconnu"}</p>
+            <p>Année : ${dvd.annee || "N/C"}</p>
+            <p>Rangement : ${dvd.rangement || "Non classé"}</p>
             <button onclick="changerWatchlist(${dvd.id})">${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}</button>
         `;
         dvdList.appendChild(card);
@@ -65,14 +66,18 @@ function afficherCards(films) {
 }
 
 function changerWatchlist(id) {
-    if (watchlist.includes(id)) watchlist = watchlist.filter(i => i !== id);
-    else watchlist.push(id);
+    if (watchlist.includes(id)) {
+        watchlist = watchlist.filter(item => item !== id);
+    } else {
+        watchlist.push(id);
+    }
     localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
     majAffichage();
 }
 
 function afficherPagination(total) {
     paginationContainer.innerHTML = "";
+    if (total <= 1) return;
     for (let i = 1; i <= total; i++) {
         const btn = document.createElement('button');
         btn.innerText = i;
@@ -85,13 +90,3 @@ function afficherPagination(total) {
 searchInput.oninput = () => { pageActuelle = 1; majAffichage(); };
 watchlistFilter.onchange = () => { pageActuelle = 1; majAffichage(); };
 sortSelect.onchange = () => majAffichage();
-
-function changerWatchlist(id) {
-    if (watchlist.includes(id)) {
-        watchlist = watchlist.filter(item => item !== id);
-    } else {
-        watchlist.push(id);
-    }
-    localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
-    majAffichage();
-}
