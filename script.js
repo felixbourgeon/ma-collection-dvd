@@ -42,20 +42,25 @@ function majAffichage() {
     resultats.sort((a, b) => {
         let valA = a[critere] ? a[critere].toString().toLowerCase() : "";
         let valB = b[critere] ? b[critere].toString().toLowerCase() : "";
-        if (critere === "annee") {
-            valA = parseInt(valA) || 0;
-            valB = parseInt(valB) || 0;
+        
+        if (critere === 'annee') {
+            valA = parseInt(a.annee) || 0;
+            valB = parseInt(b.annee) || 0;
         }
-        if (ordre === 'asc') return valA > valB ? 1 : -1;
-        return valA < valB ? 1 : -1;
+
+        if (valA < valB) return ordre === 'asc' ? -1 : 1;
+        if (valA > valB) return ordre === 'asc' ? 1 : -1;
+        return 0;
     });
 
     // 3. Pagination
     const totalPages = Math.ceil(resultats.length / filmsParPage) || 1;
     if (pageActuelle > totalPages) pageActuelle = 1;
-    const debut = (pageActuelle - 1) * filmsParPage;
     
-    afficherFilms(resultats.slice(debut, debut + filmsParPage));
+    const debut = (pageActuelle - 1) * filmsParPage;
+    const filmsAffiches = resultats.slice(debut, debut + filmsParPage);
+
+    afficherFilms(filmsAffiches);
     afficherPagination(totalPages);
 }
 
@@ -95,7 +100,7 @@ function afficherPagination(total) {
     }
 }
 
-// Écouteurs
+// Écouteurs d'événements
 searchInput.oninput = () => { pageActuelle = 1; majAffichage(); };
 watchlistFilter.onchange = () => { pageActuelle = 1; majAffichage(); };
 sortSelect.onchange = () => majAffichage();
