@@ -114,7 +114,7 @@ function afficherFilms(films) {
                 <h3>${dvd.titre || 'Sans titre'}</h3>
                 <p><strong>Réal :</strong> ${dvd.real || 'Inconnu'}</p>
                 <p><strong>Année :</strong> ${dvd.annee || 'N/C'}</p>
-                <p><strong>Lieu :</strong> ${dvd.rangement || 'N/A'}</p>
+                <p><strong>Rangement :</strong> ${dvd.rangement || 'N/A'}</p>
             </div>
             <button onclick="toggleWatchlist(${dvd.id})">
                 ${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}
