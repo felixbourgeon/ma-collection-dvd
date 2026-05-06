@@ -31,42 +31,76 @@ function majAffichage() {
         return matchTexte && matchWatchlist;
     });
 
-    // --- MISE À JOUR DU COMPTEUR ---
-    const countElement = document.getElementById('movieCount');
-    if (countElement) {
-        countElement.innerText = `${resultats.length} film${resultats.length > 1 ? 's' : ''}`;
-    }
-
     // 2. Tri
-    const [critere, ordre] = sortSelect.value.split('-');
+    const tri = sortSelect.value;
     resultats.sort((a, b) => {
-        let valA = a[critere] ? a[critere].toString().toLowerCase() : "";
-        let valB = b[critere] ? b[critere].toString().toLowerCase() : "";
-        
-        if (critere === 'annee') {
-            valA = parseInt(a.annee) || 0;
-            valB = parseInt(b.annee) || 0;
-        }
+        let valA, valB;
+        if (tri.startsWith('titre')) { valA = a.titre; valB = b.titre; }
+        else if (tri.startsWith('real')) { valA = a.real || ""; valB = b.real || ""; }
+        else if (tri.startsWith('annee')) { valA = a.annee; valB = b.annee; }
+        else { valA = a.rangement; valB = b.rangement; }
 
-        if (valA < valB) return ordre === 'asc' ? -1 : 1;
-        if (valA > valB) return ordre === 'asc' ? 1 : -1;
-        return 0;
+        if (tri.endsWith('asc')) return valA > valB ? 1 : -1;
+        return valA < valB ? 1 : -1;
     });
 
     // 3. Pagination
-    const totalPages = Math.ceil(resultats.length / filmsParPage) || 1;
-    if (pageActuelle > totalPages) pageActuelle = 1;
-    
+    const totalPages = Math.ceil(resultats.length / filmsParPage);
     const debut = (pageActuelle - 1) * filmsParPage;
-    const filmsAffiches = resultats.slice(debut, debut + filmsParPage);
+    const selection = resultats.slice(debut, debut + filmsParPage);
 
-    afficherFilms(filmsAffiches);
+    // Mise à jour du compteur
+    document.getElementById('movieCount').innerText = resultats.length;
+
+    afficherDVDs(selection);
     afficherPagination(totalPages);
 }
 
-function afficherFilms(films) {
+// --- LA NOUVELLE FONCTION DE PAGINATION ---
+function afficherPagination(total) {
+    paginationContainer.innerHTML = "";
+    if (total <= 1) return;
+
+    const delta = 2; // Nombre de pages autour de la page active
+    const range = [];
+
+    for (let i = 1; i <= total; i++) {
+        if (i === 1 || i === total || (i >= pageActuelle - delta && i <= pageActuelle + delta)) {
+            range.push(i);
+        }
+    }
+
+    let l;
+    range.forEach(i => {
+        if (l) {
+            if (i - l === 2) {
+                creerBoutonPage(l + 1);
+            } else if (i - l !== 1) {
+                const dot = document.createElement('span');
+                dot.innerText = "...";
+                paginationContainer.appendChild(dot);
+            }
+        }
+        creerBoutonPage(i);
+        l = i;
+    });
+}
+
+function creerBoutonPage(i) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
+    btn.onclick = () => { 
+        pageActuelle = i; 
+        majAffichage(); 
+        window.scrollTo(0,0); 
+    };
+    paginationContainer.appendChild(btn);
+}
+
+function afficherDVDs(liste) {
     dvdList.innerHTML = "";
-    films.forEach(dvd => {
+    liste.forEach(dvd => {
         const estDansWatchlist = watchlist.includes(dvd.id);
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''}`;
@@ -88,56 +122,7 @@ function toggleWatchlist(id) {
     majAffichage();
 }
 
-function afficherPagination(total) {
-    paginationContainer.innerHTML = "";
-    if (total <= 1) return;
-
-    const delta = 2; // Nombre de pages à afficher avant et après la page actuelle
-    const range = [];
-
-    // On calcule les numéros de pages à afficher
-    for (let i = 1; i <= total; i++) {
-        if (
-            i === 1 || // Toujours afficher la première
-            i === total || // Toujours afficher la dernière
-            (i >= pageActuelle - delta && i <= pageActuelle + delta) // Afficher autour de la page active
-        ) {
-            range.push(i);
-        }
-    }
-
-    let l;
-    range.forEach(i => {
-        // Ajouter des points de suspension s'il y a un saut de numéro
-        if (l) {
-            if (i - l === 2) {
-                creerBoutonPage(l + 1);
-            } else if (i - l !== 1) {
-                const dot = document.createElement('span');
-                dot.innerText = "...";
-                dot.style.padding = "5px 10px";
-                paginationContainer.appendChild(dot);
-            }
-        }
-        creerBoutonPage(i);
-        l = i;
-    });
-}
-
-// Fonction utilitaire pour créer les boutons
-function creerBoutonPage(i) {
-    const btn = document.createElement('button');
-    btn.innerText = i;
-    btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-    btn.onclick = () => { 
-        pageActuelle = i; 
-        majAffichage(); 
-        window.scrollTo(0,0); 
-    };
-    paginationContainer.appendChild(btn);
-}
-
 // Écouteurs d'événements
-searchInput.oninput = () => { pageActuelle = 1; majAffichage(); };
-watchlistFilter.onchange = () => { pageActuelle = 1; majAffichage(); };
-sortSelect.onchange = () => majAffichage();
+searchInput.addEventListener('input', () => { pageActuelle = 1; majAffichage(); });
+watchlistFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); });
+sortSelect.addEventListener('change', () => { majAffichage(); });
