@@ -6,6 +6,7 @@ const paginationContainer = document.getElementById('pagination');
 
 let mesDVDs = [];
 let watchlist = JSON.parse(localStorage.getItem('maWatchlist')) || [];
+let filmsVus = JSON.parse(localStorage.getItem('mesFilmsVus')) || [];
 let pageActuelle = 1;
 const filmsParPage = 40;
 
@@ -44,32 +45,75 @@ function majAffichage() {
         return valA < valB ? 1 : -1;
     });
 
-    // 3. Pagination
+    // 3. Calcul Pagination
     const totalPages = Math.ceil(resultats.length / filmsParPage);
     const debut = (pageActuelle - 1) * filmsParPage;
     const selection = resultats.slice(debut, debut + filmsParPage);
 
-    // Mise à jour du compteur
+    // Mise à jour de l'interface
     document.getElementById('movieCount').innerText = resultats.length;
-
+    majProgressions(mesDVDs.length, watchlist.length);
     afficherDVDs(selection);
     afficherPagination(totalPages);
 }
 
-// --- LA NOUVELLE FONCTION DE PAGINATION ---
+function majProgressions(totalFilms, totalWatchlist) {
+    const vusDansWatchlist = watchlist.filter(id => filmsVus.includes(id)).length;
+    
+    const pctTotal = totalFilms > 0 ? ((filmsVus.length / totalFilms) * 100).toFixed(1) : 0;
+    const pctWatchlist = totalWatchlist > 0 ? ((vusDansWatchlist / totalWatchlist) * 100).toFixed(1) : 0;
+
+    document.getElementById('barreTotal').style.width = pctTotal + "%";
+    document.getElementById('texteTotal').innerText = `Collection : ${pctTotal}% vus (${filmsVus.length}/${totalFilms})`;
+
+    document.getElementById('barreWatchlist').style.width = pctWatchlist + "%";
+    document.getElementById('texteWatchlist').innerText = `Watchlist : ${pctWatchlist}% vus (${vusDansWatchlist}/${totalWatchlist})`;
+}
+
+function afficherDVDs(liste) {
+    dvdList.innerHTML = "";
+    liste.forEach(dvd => {
+        const estDansWatchlist = watchlist.includes(dvd.id);
+        const estVu = filmsVus.includes(dvd.id);
+        const card = document.createElement('div');
+        card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''} ${estVu ? 'vu' : ''}`;
+        card.innerHTML = `
+            <h3>${dvd.titre || "Sans titre"}</h3>
+            <p><strong>Réalisateur :</strong> ${dvd.real || "Inconnu"}</p>
+            <p><strong>Année :</strong> ${dvd.annee || "N/C"}</p>
+            <p><strong>Rangement :</strong> ${dvd.rangement || "Non classé"}</p>
+            <div class="card-buttons">
+                <button onclick="toggleWatchlist(${dvd.id})">${estDansWatchlist ? '❌ Watchlist' : '⭐ Watchlist'}</button>
+                <button class="btn-vu" onclick="toggleVu(${dvd.id})">${estVu ? '✅ Vu' : '👁️ Vu'}</button>
+            </div>
+        `;
+        dvdList.appendChild(card);
+    });
+}
+
+function toggleWatchlist(id) {
+    if (watchlist.includes(id)) watchlist = watchlist.filter(i => i !== id);
+    else watchlist.push(id);
+    localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
+    majAffichage();
+}
+
+function toggleVu(id) {
+    if (filmsVus.includes(id)) filmsVus = filmsVus.filter(i => i !== id);
+    else filmsVus.push(id);
+    localStorage.setItem('mesFilmsVus', JSON.stringify(filmsVus));
+    majAffichage();
+}
+
 function afficherPagination(total) {
     paginationContainer.innerHTML = "";
     if (total <= 1) return;
 
-    const delta = 1; // On n'affiche qu'une page avant et après
+    const delta = 1;
     const range = [];
 
     for (let i = 1; i <= total; i++) {
-        if (
-            i === 1 || 
-            i === total || 
-            (i >= pageActuelle - delta && i <= pageActuelle + delta)
-        ) {
+        if (i === 1 || i === total || (i >= pageActuelle - delta && i <= pageActuelle + delta)) {
             range.push(i);
         }
     }
@@ -78,7 +122,6 @@ function afficherPagination(total) {
     range.forEach(i => {
         if (l) {
             if (i - l !== 1) {
-                // On affiche TOUJOURS des points de suspension si l'écart est > 1
                 const dot = document.createElement('span');
                 dot.innerText = "...";
                 paginationContainer.appendChild(dot);
@@ -99,30 +142,6 @@ function creerBoutonPage(i) {
         window.scrollTo(0,0); 
     };
     paginationContainer.appendChild(btn);
-}
-
-function afficherDVDs(liste) {
-    dvdList.innerHTML = "";
-    liste.forEach(dvd => {
-        const estDansWatchlist = watchlist.includes(dvd.id);
-        const card = document.createElement('div');
-        card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''}`;
-        card.innerHTML = `
-            <h3>${dvd.titre || "Sans titre"}</h3>
-            <p><strong>Réalisateur :</strong> ${dvd.real || "Inconnu"}</p>
-            <p><strong>Année :</strong> ${dvd.annee || "N/C"}</p>
-            <p><strong>Rangement :</strong> ${dvd.rangement || "Non classé"}</p>
-            <button onclick="toggleWatchlist(${dvd.id})">${estDansWatchlist ? '❌ Retirer' : '⭐ Watchlist'}</button>
-        `;
-        dvdList.appendChild(card);
-    });
-}
-
-function toggleWatchlist(id) {
-    if (watchlist.includes(id)) watchlist = watchlist.filter(i => i !== id);
-    else watchlist.push(id);
-    localStorage.setItem('maWatchlist', JSON.stringify(watchlist));
-    majAffichage();
 }
 
 // Écouteurs d'événements
