@@ -1,49 +1,40 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma DVDthèque</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Ma Collection DVD <span id="movieCount" class="movie-counter"></span></h1>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Rechercher titre, réalisateur, année, rangement...">
-            <div class="controls-row">
-                <div class="filter-container">
-                    <label><input type="checkbox" id="watchlistFilter"> ⭐ Watchlist</label>
-                </div>
-                <select id="sortSelect">
-                    <option value="titre-asc">Titre (A-Z)</option>
-                    <option value="titre-desc">Titre (Z-A)</option>
-                    <option value="real-asc">Réalisateur (A-Z)</option>
-                    <option value="real-desc">Réalisateur (Z-A)</option>
-                    <option value="annee-desc">Plus récents</option>
-                    <option value="annee-asc">Plus anciens</option>
-                    <option value="rangement-asc">Rangement (A-Z)</option>
-                    <option value="rangement-desc">Rangement (Z-A)</option>
-                </select>
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Rechercher titre, réalisateur, année, rangement...">
+    
+    <div class="controls-column">
+        <div class="checkbox-row">
+            <div class="filter-container">
+                <label><input type="checkbox" id="watchlistFilter"> ⭐ Watchlist</label>
             </div>
-
-            <div class="progress-container">
-                <div class="progress-item">
-                    <span id="texteTotal">Collection : 0% vus</span>
-                    <div class="progress-bg"><div id="barreTotal" class="progress-fill"></div></div>
-                </div>
-                <div class="progress-item">
-                    <span id="texteWatchlist">Watchlist : 0% vus</span>
-                    <div class="progress-bg"><div id="barreWatchlist" class="progress-fill watchlist"></div></div>
-                </div>
+            <div class="filter-container">
+                <label><input type="checkbox" id="vuFilter"> 👁️ Déjà vus</label>
             </div>
-
-            <div id="pagination" class="pagination-container"></div>
         </div>
-    </header>
 
-    <main id="dvdList"></main>
+        <div class="sort-row">
+            <select id="sortSelect">
+                <option value="titre-asc">Titre (A-Z)</option>
+                <option value="titre-desc">Titre (Z-A)</option>
+                <option value="real-asc">Réalisateur (A-Z)</option>
+                <option value="real-desc">Réalisateur (Z-A)</option>
+                <option value="annee-desc">Plus récents</option>
+                <option value="annee-asc">Plus anciens</option>
+                <option value="rangement-asc">Rangement (A-Z)</option>
+                <option value="rangement-desc">Rangement (Z-A)</option>
+            </select>
+        </div>
+    </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <div class="progress-container">
+        <div class="progress-item">
+            <span id="texteTotal">Collection : 0% vus</span>
+            <div class="progress-bg"><div id="barreTotal" class="progress-fill"></div></div>
+        </div>
+        <div class="progress-item">
+            <span id="texteWatchlist">Watchlist : 0% vus</span>
+            <div class="progress-bg"><div id="barreWatchlist" class="progress-fill watchlist"></div></div>
+        </div>
+    </div>
+
+    <div id="pagination" class="pagination-container"></div>
+</div>
