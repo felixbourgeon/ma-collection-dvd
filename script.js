@@ -61,7 +61,7 @@ function afficherPagination(total) {
     paginationContainer.innerHTML = "";
     if (total <= 1) return;
 
-    const delta = 2; // Nombre de pages autour de la page active
+    const delta = 1; // Nombre de pages autour de la page active
     const range = [];
 
     for (let i = 1; i <= total; i++) {
