@@ -91,13 +91,50 @@ function toggleWatchlist(id) {
 function afficherPagination(total) {
     paginationContainer.innerHTML = "";
     if (total <= 1) return;
+
+    const delta = 2; // Nombre de pages à afficher avant et après la page actuelle
+    const range = [];
+
+    // On calcule les numéros de pages à afficher
     for (let i = 1; i <= total; i++) {
-        const btn = document.createElement('button');
-        btn.innerText = i;
-        btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-        btn.onclick = () => { pageActuelle = i; majAffichage(); window.scrollTo(0,0); };
-        paginationContainer.appendChild(btn);
+        if (
+            i === 1 || // Toujours afficher la première
+            i === total || // Toujours afficher la dernière
+            (i >= pageActuelle - delta && i <= pageActuelle + delta) // Afficher autour de la page active
+        ) {
+            range.push(i);
+        }
     }
+
+    let l;
+    range.forEach(i => {
+        // Ajouter des points de suspension s'il y a un saut de numéro
+        if (l) {
+            if (i - l === 2) {
+                creerBoutonPage(l + 1);
+            } else if (i - l !== 1) {
+                const dot = document.createElement('span');
+                dot.innerText = "...";
+                dot.style.padding = "5px 10px";
+                paginationContainer.appendChild(dot);
+            }
+        }
+        creerBoutonPage(i);
+        l = i;
+    });
+}
+
+// Fonction utilitaire pour créer les boutons
+function creerBoutonPage(i) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
+    btn.onclick = () => { 
+        pageActuelle = i; 
+        majAffichage(); 
+        window.scrollTo(0,0); 
+    };
+    paginationContainer.appendChild(btn);
 }
 
 // Écouteurs d'événements
