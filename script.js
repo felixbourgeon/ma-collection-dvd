@@ -61,11 +61,15 @@ function afficherPagination(total) {
     paginationContainer.innerHTML = "";
     if (total <= 1) return;
 
-    const delta = 1; // Nombre de pages autour de la page active
+    const delta = 1; // On n'affiche qu'une page avant et après
     const range = [];
 
     for (let i = 1; i <= total; i++) {
-        if (i === 1 || i === total || (i >= pageActuelle - delta && i <= pageActuelle + delta)) {
+        if (
+            i === 1 || 
+            i === total || 
+            (i >= pageActuelle - delta && i <= pageActuelle + delta)
+        ) {
             range.push(i);
         }
     }
@@ -73,9 +77,8 @@ function afficherPagination(total) {
     let l;
     range.forEach(i => {
         if (l) {
-            if (i - l === 2) {
-                creerBoutonPage(l + 1);
-            } else if (i - l !== 1) {
+            if (i - l !== 1) {
+                // On affiche TOUJOURS des points de suspension si l'écart est > 1
                 const dot = document.createElement('span');
                 dot.innerText = "...";
                 paginationContainer.appendChild(dot);
