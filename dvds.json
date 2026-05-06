@@ -1203,7 +1203,7 @@
 { "id": 1202, "titre": "L'Heure suprême", "real": "Frank Borzage", "annee": 1927, "rangement": "Meuble TV" },
 { "id": 1203, "titre": "Bowling for Columbine", "real": "Michael Moore", "annee": 2002, "rangement": "Meuble TV" },
 { "id": 1204, "titre": "L'Arnaque", "real": "George Roy Hill", "annee": 1973, "rangement": "Meuble TV" },
-{ "id": 1205, "titre": "Le Labyrinthe : Le Remède mortel", "real": "Wes Ball", "annee": 2018, "rangement": "Meuble TV" },
+{ "id": 1205, "titre": "Le Labyrinthe : Le Remède mortel (doublon)", "real": "Wes Ball", "annee": 2018, "rangement": "Meuble TV" },
 { "id": 1206, "titre": "Jason Bourne - Mémoire dans la peau", "real": "Doug Liman", "annee": 2002, "rangement": "Meuble TV" },
 { "id": 1207, "titre": "Jason Bourne - La Mort dans la peau", "real": "Paul Greengrass", "annee": 2004, "rangement": "Meuble TV" },
 { "id": 1208, "titre": "Jason Bourne - La Vengeance dans la peau", "real": "Paul Greengrass", "annee": 2007, "rangement": "Meuble TV" },
@@ -1233,5 +1233,5 @@
 { "id": 1232, "titre": "Cría cuervos", "real": "Carlos Saura", "annee": 1976, "rangement": "Meuble TV" },
 { "id": 1233, "titre": "Au-delà de la gloire", "real": "Samuel Fuller", "annee": 1980, "rangement": "Meuble TV" },
 { "id": 1234, "titre": "Quand les aigles attaquent", "real": "Brian G. Hutton", "annee": 1968, "rangement": "Meuble TV" },
-{ "id": 1235, "titre": "Fort Alamo", "real": "John Wayne", "annee": 1960, "rangement": "Meuble TV" }
+{ "id": 1235, "titre": "Fort Alamo", "real": "John Wayne", "annee": 1960, "rangement": "Classeur Orange/Jaune" }
 ]
