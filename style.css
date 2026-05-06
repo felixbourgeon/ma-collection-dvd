@@ -5,15 +5,32 @@ header { text-align: center; margin-bottom: 30px; }
 .controls-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
 .filter-container { background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 #sortSelect { padding: 8px 12px; border-radius: 20px; border: 1px solid #ddd; background: white; cursor: pointer; }
+
+/* Styles Barres de Progression */
+.progress-container { width: 90%; max-width: 500px; margin: 10px auto; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.progress-item span { font-size: 0.8em; font-weight: bold; color: #2c3e50; }
+.progress-bg { background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 2px; }
+.progress-fill { background: #2ecc71; height: 100%; width: 0%; transition: width 0.5s ease; }
+.progress-fill.watchlist { background: #f1c40f; }
+
+/* DVD List & Cards */
 #dvdList { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-.dvd-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #2c3e50; display: flex; flex-direction: column; justify-content: space-between; }
+.dvd-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #2c3e50; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
 .dvd-card.watchlist { border-top-color: #f1c40f; background-color: #fffef0; }
-.dvd-card h3 { margin: 0 0 10px 0; color: #2c3e50; font-size: 1.2em; }
+.dvd-card.vu { border-top-color: #2ecc71; opacity: 0.85; }
+.dvd-card h3 { margin: 0 0 10px 0; color: #2c3e50; font-size: 1.1em; }
 .dvd-card p { margin: 4px 0; color: #555; font-size: 0.9em; }
-.pagination-container { margin: 20px 0; display: flex; gap: 5px; justify-content: center; }
+
+/* Boutons dans les cartes */
+.card-buttons { display: flex; gap: 8px; margin-top: 15px; }
+.card-buttons button { flex: 1; margin-top: 0; padding: 8px 5px; font-size: 0.85em; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
+.card-buttons button:first-child { background-color: #3498db; } /* Bouton Watchlist */
+.btn-vu { background-color: #27ae60 !important; } /* Bouton Vu */
+
+/* Pagination */
+.pagination-container { margin: 20px 0; display: flex; gap: 5px; justify-content: center; align-items: center; }
+.pagination-container span { color: #7f8c8d; font-weight: bold; padding: 0 5px; }
 .page-btn { padding: 5px 12px; border: 1px solid #3498db; background: white; color: #3498db; border-radius: 4px; cursor: pointer; }
 .page-btn.active { background: #3498db; color: white; }
-button { background-color: #3498db; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
-.movie-counter { font-size: 0.5em; vertical-align: middle; background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.pagination-container { display: flex; align-items: center; /* Aligne les "..." verticalement avec les boutons */flex-wrap: wrap; gap: 8px; }
-.pagination-container span { color: #7f8c8d; font-weight: bold; }
+
+.movie-counter { font-size: 0.5em; vertical-align: middle; background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; }
