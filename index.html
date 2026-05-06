@@ -26,10 +26,24 @@
                     <option value="rangement-desc">Rangement (Z-A)</option>
                 </select>
             </div>
+
+            <div class="progress-container">
+                <div class="progress-item">
+                    <span id="texteTotal">Collection : 0% vus</span>
+                    <div class="progress-bg"><div id="barreTotal" class="progress-fill"></div></div>
+                </div>
+                <div class="progress-item">
+                    <span id="texteWatchlist">Watchlist : 0% vus</span>
+                    <div class="progress-bg"><div id="barreWatchlist" class="progress-fill watchlist"></div></div>
+                </div>
+            </div>
+
             <div id="pagination" class="pagination-container"></div>
         </div>
     </header>
+
     <main id="dvdList"></main>
+
     <script src="script.js"></script>
 </body>
 </html>
