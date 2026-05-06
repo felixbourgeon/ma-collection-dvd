@@ -1233,5 +1233,12 @@
 { "id": 1232, "titre": "Cría cuervos", "real": "Carlos Saura", "annee": 1976, "rangement": "Meuble TV" },
 { "id": 1233, "titre": "Au-delà de la gloire", "real": "Samuel Fuller", "annee": 1980, "rangement": "Meuble TV" },
 { "id": 1234, "titre": "Quand les aigles attaquent", "real": "Brian G. Hutton", "annee": 1968, "rangement": "Meuble TV" },
-{ "id": 1235, "titre": "Fort Alamo", "real": "John Wayne", "annee": 1960, "rangement": "Classeur Orange" }
+{ "id": 1235, "titre": "Fort Alamo", "real": "John Wayne", "annee": 1960, "rangement": "Classeur Orange" },
+{ "id": 1236, "titre": "Gloria", "real": "John Cassavetes", "annee": 1980, "rangement": "Meuble TV" },
+{ "id": 1237, "titre": "Jour de fête", "real": "Jacques Tati", "annee": 1949, "rangement": "Meuble TV" },
+{ "id": 1238, "titre": "Les Vacances de monsieur Hulot", "real": "Jacques Tati", "annee": 1953, "rangement": "Meuble TV" },
+{ "id": 1239, "titre": "Playtime", "real": "Jacques Tati", "annee": 1967, "rangement": "Meuble TV" },
+{ "id": 1240, "titre": "Trafic", "real": "Jacques Tati", "annee": 1971, "rangement": "Meuble TV" },
+{ "id": 1241, "titre": "Parade", "real": "Jacques Tati", "annee": 1974, "rangement": "Meuble TV" },
+{ "id": 1242, "titre": "Mon oncle", "real": "Jacques Tati", "annee": 1958, "rangement": "Meuble TV" }
 ]
