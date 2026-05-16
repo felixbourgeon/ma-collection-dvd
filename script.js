@@ -1,7 +1,7 @@
 const dvdList = document.getElementById('dvdList');
 const searchInput = document.getElementById('searchInput');
 const watchlistFilter = document.getElementById('watchlistFilter');
-const vuFilter = document.getElementById('vuFilter'); // Nouveau filtre
+const vuFilter = document.getElementById('vuFilter');
 const sortSelect = document.getElementById('sortSelect');
 const paginationContainer = document.getElementById('pagination');
 
@@ -26,11 +26,24 @@ fetch('dvds.json?v=' + new Date().getTime())
 function majAffichage() {
     const recherche = searchInput.value.toLowerCase();
     
-    // 1. Filtrage
+    // 1. Filtrage (recherche étendue au pays également)
     let resultats = mesDVDs.filter(dvd => {
-        const matchTexte = (dvd.titre + (dvd.real || "") + (dvd.annee || "") + (dvd.rangement || "")).toLowerCase().includes(recherche);
+        const matchTexte = (
+            (dvd.titre || "") + 
+            (dvd.real || "") + 
+            (dvd.annee || "") + 
+            (dvd.rangement || "") + 
+            (dvd.pays || "")
+        ).toLowerCase().includes(recherche);
+        
         const matchWatchlist = watchlistFilter.checked ? watchlist.includes(dvd.id) : true;
-        const matchVu = vuFilter.checked ? filmsVus.includes(dvd.id) : true; // Logique du filtre "Vu"
+        
+        let matchVu = true;
+        if (vuFilter.value === 'vus') {
+            matchVu = filmsVus.includes(dvd.id);
+        } else if (vuFilter.value === 'non-vus') {
+            matchVu = !filmsVus.includes(dvd.id);
+        }
         
         return matchTexte && matchWatchlist && matchVu;
     });
@@ -80,8 +93,19 @@ function afficherDVDs(liste) {
         const estVu = filmsVus.includes(dvd.id);
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''} ${estVu ? 'vu' : ''}`;
+        
+        // Formatage de la durée (ex: si tu écris 120 dans le JSON, optionnellement ajout de "min")
+        const dureeAffichage = dvd.duree ? `${dvd.duree} min` : "N/C";
+        const paysAffichage = dvd.pays || "N/C";
+
         card.innerHTML = `
             <h3>${dvd.titre || "Sans titre"}</h3>
+            
+            <div class="movie-meta-row">
+                <span class="meta-badge ⏱️">${dureeAffichage}</span>
+                <span class="meta-badge 🌍">${paysAffichage}</span>
+            </div>
+
             <p><strong>Réalisateur :</strong> ${dvd.real || "Inconnu"}</p>
             <p><strong>Année :</strong> ${dvd.annee || "N/C"}</p>
             <p><strong>Rangement :</strong> ${dvd.rangement || "Non classé"}</p>
@@ -150,5 +174,5 @@ function creerBoutonPage(i) {
 // Écouteurs d'événements
 searchInput.addEventListener('input', () => { pageActuelle = 1; majAffichage(); });
 watchlistFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); });
-vuFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); }); // Nouvel écouteur
+vuFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); });
 sortSelect.addEventListener('change', () => { majAffichage(); });
