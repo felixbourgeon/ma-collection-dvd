@@ -1,6 +1,6 @@
 [
-  { "id": 1, "titre": "Blow Out", "real": "Brian De Palma", "annee": 1981, "rangement": "Classeur bleu" },
-  { "id": 2, "titre": "Furie", "real": "Brian De Palma", "annee": 1978, "rangement": "Classeur bleu" },
+  { "id": 1, "titre": "Blow Out", "real": "Brian De Palma", "annee": 1981, "rangement": "Classeur bleu", "duree": 108, "pays": "USA" },
+  { "id": 2, "titre": "Furie", "real": "Brian De Palma", "annee": 1978, "rangement": "Classeur bleu", "duree": 118, "pays": "USA" },
   { "id": 3, "titre": "Carrie", "real": "Brian De Palma", "annee": 1976, "rangement": "Classeur bleu" },
   { "id": 4, "titre": "Pulsions", "real": "Brian De Palma", "annee": 1980, "rangement": "Classeur bleu" },
   { "id": 5, "titre": "Sisters (Disque 2 - Compléments)", "real": "Brian De Palma", "annee": 1973, "rangement": "Classeur bleu" },
