@@ -1,7 +1,7 @@
 const dvdList = document.getElementById('dvdList');
 const searchInput = document.getElementById('searchInput');
 const watchlistFilter = document.getElementById('watchlistFilter');
-const vuFilter = document.getElementById('vuFilter'); // Sélectionne le nouveau menu déroulant
+const vuFilter = document.getElementById('vuFilter'); // Nouveau filtre
 const sortSelect = document.getElementById('sortSelect');
 const paginationContainer = document.getElementById('pagination');
 
@@ -30,14 +30,7 @@ function majAffichage() {
     let resultats = mesDVDs.filter(dvd => {
         const matchTexte = (dvd.titre + (dvd.real || "") + (dvd.annee || "") + (dvd.rangement || "")).toLowerCase().includes(recherche);
         const matchWatchlist = watchlistFilter.checked ? watchlist.includes(dvd.id) : true;
-        
-        // Nouvelle logique à 3 états pour le filtre de visionnage
-        let matchVu = true;
-        if (vuFilter.value === 'vus') {
-            matchVu = filmsVus.includes(dvd.id);
-        } else if (vuFilter.value === 'non-vus') {
-            matchVu = !filmsVus.includes(dvd.id);
-        }
+        const matchVu = vuFilter.checked ? filmsVus.includes(dvd.id) : true; // Logique du filtre "Vu"
         
         return matchTexte && matchWatchlist && matchVu;
     });
@@ -157,5 +150,5 @@ function creerBoutonPage(i) {
 // Écouteurs d'événements
 searchInput.addEventListener('input', () => { pageActuelle = 1; majAffichage(); });
 watchlistFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); });
-vuFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); }); // Écoute le changement du menu déroulant
+vuFilter.addEventListener('change', () => { pageActuelle = 1; majAffichage(); }); // Nouvel écouteur
 sortSelect.addEventListener('change', () => { majAffichage(); });
