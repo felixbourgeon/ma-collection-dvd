@@ -25,7 +25,7 @@ header { text-align: center; margin-bottom: 30px; }
     width: 100%;
 }
 
-.checkbox-row {
+.filter-row {
     display: flex;
     gap: 10px;
     justify-content: center;
@@ -47,6 +47,10 @@ header { text-align: center; margin-bottom: 30px; }
     align-items: center;
 }
 
+.filter-container.select-container {
+    padding: 4px 10px;
+}
+
 .filter-container label {
     cursor: pointer;
     font-weight: 500;
@@ -54,6 +58,17 @@ header { text-align: center; margin-bottom: 30px; }
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+#vuFilter {
+    border: none;
+    background: transparent;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 0.9em;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 5px;
 }
 
 #sortSelect { 
@@ -77,7 +92,23 @@ header { text-align: center; margin-bottom: 30px; }
 .dvd-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #2c3e50; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
 .dvd-card.watchlist { border-top-color: #f1c40f; background-color: #fffef0; }
 .dvd-card.vu { border-top-color: #2ecc71; opacity: 0.85; }
-.dvd-card h3 { margin: 0 0 10px 0; color: #2c3e50; font-size: 1.1em; }
+.dvd-card h3 { margin: 0 0 5px 0; color: #2c3e50; font-size: 1.1em; }
+
+/* Style pour la ligne Durée + Pays */
+.movie-meta-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.meta-badge {
+    background: #edf2f7;
+    color: #4a5568;
+    font-size: 0.75em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
 .dvd-card p { margin: 4px 0; color: #555; font-size: 0.9em; }
 
 /* Boutons dans les cartes */
