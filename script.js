@@ -26,7 +26,7 @@ fetch('dvds.json?v=' + new Date().getTime())
 function majAffichage() {
     const recherche = searchInput.value.toLowerCase();
     
-    // 1. Filtrage (recherche étendue au pays également)
+    // 1. Filtrage
     let resultats = mesDVDs.filter(dvd => {
         const matchTexte = (
             (dvd.titre || "") + 
@@ -52,10 +52,15 @@ function majAffichage() {
     const tri = sortSelect.value;
     resultats.sort((a, b) => {
         let valA, valB;
+        
         if (tri.startsWith('titre')) { valA = a.titre; valB = b.titre; }
         else if (tri.startsWith('real')) { valA = a.real || ""; valB = b.real || ""; }
         else if (tri.startsWith('annee')) { valA = a.annee; valB = b.annee; }
-        else { valA = a.rangement; valB = b.rangement; }
+        else if (tri.startsWith('duree')) {
+            valA = parseInt(a.duree) || (tri.endsWith('asc') ? 9999 : -1);
+            valB = parseInt(b.duree) || (tri.endsWith('asc') ? 9999 : -1);
+            return tri.endsWith('asc') ? valA - valB : valB - valA;
+        }
 
         if (tri.endsWith('asc')) return valA > valB ? 1 : -1;
         return valA < valB ? 1 : -1;
@@ -94,7 +99,6 @@ function afficherDVDs(liste) {
         const card = document.createElement('div');
         card.className = `dvd-card ${estDansWatchlist ? 'watchlist' : ''} ${estVu ? 'vu' : ''}`;
         
-        // Formatage de la durée (ex: si tu écris 120 dans le JSON, optionnellement ajout de "min")
         const dureeAffichage = dvd.duree ? `${dvd.duree} min` : "N/C";
         const paysAffichage = dvd.pays || "N/C";
 
@@ -102,8 +106,8 @@ function afficherDVDs(liste) {
             <h3>${dvd.titre || "Sans titre"}</h3>
             
             <div class="movie-meta-row">
-                <span class="meta-badge ⏱️">${dureeAffichage}</span>
-                <span class="meta-badge 🌍">${paysAffichage}</span>
+                <span class="meta-badge">${dureeAffichage}</span>
+                <span class="meta-badge">${paysAffichage}</span>
             </div>
 
             <p><strong>Réalisateur :</strong> ${dvd.real || "Inconnu"}</p>
